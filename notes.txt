@@ -1,0 +1,13 @@
+docker stop basemongo
+docker rm basemongo 
+
+docker run -d --network network1 --name basemongo -p 27017:27017 \
+	-e MONGO_INITDB_ROOT_USERNAME=mongoadmin \
+	-e MONGO_INITDB_ROOT_PASSWORD=secret \
+	mongo
+
+
+docker cp users.json basemongo:/users.json
+
+docker exec -it basemongo mongoimport -u mongoadmin -p secret --db users --collection users --file users.json --jsonArray  --authenticationDatabase=admin 
+
